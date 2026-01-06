@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Abfuhrkalender</title>
+<style>
+  body {
+    font-family: sans-serif;
+    text-align: center;
+    font-size: 3em; /* gut lesbar auf E-Ink */
+    background: white;
+    color: black;
+    margin: 0;
+    padding: 20px;
+  }
+  .tonne {
+    margin: 20px 0;
+  }
+</style>
+</head>
+<body>
+
+<div id="kalender">Lade Abfuhrkalender...</div>
+
+<script>
+// =========================
+// Konfiguration
+// =========================
+const icsUrl = "1C8M2L_kjM1kF1qVjYve220wwqM-X2vTl"; // z. B. Google Drive öffentlich
+const TONNEN = {
+    "Gelb": "♻️",
+    "Rest": "🗑️",
+    "Papier": "📘"
+};
+
+// =========================
+// Hilfsfunktionen
+// =========================
+function formatDate(d) {
+    const tag = String(d.getDate()).padStart(2,'0');
+    const monat = String(d.getMonth()+1).padStart(2,'0');
+    const jahr = d.getFullYear();
+    return `${tag}.${monat}.${jahr}`;
+}
+
+function parseICS(icsText) {
+    const lines = icsText.split("\n");
+    let events = [];
+    let current = {};
+    lines.forEach(line => {
+        if(line.startsWith("BEGIN:VEVENT")) current = {};
+        if(line.startsWith("SUMMARY:")) current.summary = line.substring(8).trim();
+        if(line.startsWith("DTSTART")) {
+            const d = line.match(/\d{8}/)[0];
+            current.date = `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}`;
+        }
+        if(line.startsWith("END:VEVENT")) events.push(current);
+    });
+    return events;
+}
+
+// =========================
+// Hauptfunktion
+// =========================
+fetch(icsUrl)
+.then(response => response.text())
+.then(data => {
+    const events = parseICS(data);
+    const today = new Date();
+    const morgen = new Date();
+    morgen.setDate(today.getDate()+1);
+
+    const todayStr = today.toISOString().slice(0,10);
+    const morgenStr = morgen.toISOString().slice(0,10);
+
+    let output = [];
+
+    // Prüfen, welche Tonnen heute dran sind
+    events.forEach(e => {
+        for(let key in TONNEN){
+            if(e.summary.includes(key) && e.date === todayStr){
+                output.push(`${TONNEN[key]} heute – ${formatDate(today)}`);
+            }
+        }
+    });
+
+    // Wenn heute nichts, dann morgen prüfen
+    events.forEach(e => {
+        for(let key in TONNEN){
+            if(e.summary.includes(key) && e.date === morgenStr){
+                output.push(`${TONNEN[key]} morgen – ${formatDate(morgen)}`);
+            }
+        }
+    });
+
+    if(output.length === 0) output.push("✅ Heute keine Abfuhr");
+
+    document.getElementById("kalender").innerHTML = output.join("<br>");
+})
+.catch(err => {
+    console.error(err);
+    document.getElementById("kalender").innerHTML = "Fehler beim Laden des Kalenders";
+});
+</script>
+
+</body>
+</html>
