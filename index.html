@@ -1,31 +1,47 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<title>AWB Abfuhrkalender</title>
-<style>
-  body {
-    font-family: sans-serif;
-    text-align: center;
-    font-size: 3em;
-    background: white;
-    color: black;
-    margin: 0;
-    padding: 20px;
-  }
-  .tonne {
-    margin: 20px 0;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <title>Abfuhrkalender</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      color: black;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      align-items: center;      /* vertikal */
+      justify-content: center;  /* horizontal */
+      text-align: center;
+    }
+
+    .emoji {
+      font-size: 96px;
+      line-height: 1;
+    }
+
+    .label {
+      font-size: 36px;
+      margin-top: 12px;
+    }
+
+    .date {
+      font-size: 28px;
+      margin-top: 6px;
+    }
+  </style>
 </head>
 <body>
 
-<div id="kalender">Lade Abfuhrkalender…</div>
+<div id="output">Lade…</div>
 
 <script>
-// ===============================
-// HIER ICS-INHALT EINFÜGEN
-// ===============================
 const icsText = `
 BEGIN:VCALENDAR
 VERSION:2.0
@@ -1283,73 +1299,71 @@ END:VEVENT
 END:VCALENDAR
 `;
 
-// Emojis (E-Ink-geeignet)
-const TONNEN = {
-  "Gelb": "♻️",
+/* Emoji-Mapping (E-Ink-tauglich) */
+const icons = {
   "Rest": "🗑️",
+  "Gelbe": "♻️",
   "Papier": "📘"
 };
 
-// ===============================
-// Hilfsfunktionen
-// ===============================
-function formatDate(d) {
-  return d.toLocaleDateString("de-DE");
-}
-
+/* ICS parsen */
 function parseICS(text) {
   const events = [];
-  const lines = text.split(/\r?\n/);
-  let event = null;
+  const blocks = text.split("BEGIN:VEVENT").slice(1);
 
-  lines.forEach(line => {
-    if (line.startsWith("BEGIN:VEVENT")) event = {};
-    if (line.startsWith("SUMMARY:")) event.summary = line.substring(8);
-    if (line.startsWith("DTSTART")) {
-      const d = line.match(/\d{8}/)[0];
-      event.date = `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}`;
-    }
-    if (line.startsWith("END:VEVENT")) events.push(event);
-  });
+  for (const block of blocks) {
+    const summary = block.match(/SUMMARY:(.+)/)?.[1];
+    const dateRaw = block.match(/DTSTART;VALUE=DATE:(\d{8})/)?.[1];
+    if (!summary || !dateRaw) continue;
 
+    const date = new Date(
+      dateRaw.slice(0,4),
+      dateRaw.slice(4,6) - 1,
+      dateRaw.slice(6,8)
+    );
+
+    events.push({ summary, date });
+  }
   return events;
 }
 
-// ===============================
-// Logik
-// ===============================
 const events = parseICS(icsText);
 
 const today = new Date();
-const tomorrow = new Date();
+today.setHours(0,0,0,0);
+
+const tomorrow = new Date(today);
 tomorrow.setDate(today.getDate() + 1);
 
-const todayStr = today.toISOString().slice(0,10);
-const tomorrowStr = tomorrow.toISOString().slice(0,10);
-
-let output = [];
-
-events.forEach(e => {
-  for (let key in TONNEN) {
-    if (e.summary?.includes(key) && e.date === todayStr) {
-      output.push(`${TONNEN[key]} heute – ${formatDate(today)}`);
-    }
-  }
-});
-
-events.forEach(e => {
-  for (let key in TONNEN) {
-    if (e.summary?.includes(key) && e.date === tomorrowStr) {
-      output.push(`${TONNEN[key]} morgen – ${formatDate(tomorrow)}`);
-    }
-  }
-});
-
-if (output.length === 0) {
-  output.push("✅ Heute keine Abfuhr");
+function sameDay(a, b) {
+  return a.getTime() === b.getTime();
 }
 
-document.getElementById("kalender").innerHTML = output.join("<br>");
+let event = events.find(e => sameDay(e.date, today));
+let label = "Heute";
+
+if (!event) {
+  event = events.find(e => sameDay(e.date, tomorrow));
+  label = "Morgen";
+}
+
+const output = document.getElementById("output");
+
+if (!event) {
+  output.innerHTML = `
+    <div class="emoji">✅</div>
+    <div class="label">Keine Abfuhr</div>
+  `;
+} else {
+  const d = event.date;
+  const dateStr = `${String(d.getDate()).padStart(2,"0")}.${String(d.getMonth()+1).padStart(2,"0")}.${d.getFullYear()}`;
+
+  output.innerHTML = `
+    <div class="emoji">${icons[event.summary] || "🗑️"}</div>
+    <div class="label">${label}</div>
+    <div class="date">${dateStr}</div>
+  `;
+}
 </script>
 
 </body>
