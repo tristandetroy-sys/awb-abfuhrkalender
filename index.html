@@ -2,12 +2,12 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Abfuhrkalender</title>
+<title>AWB Abfuhrkalender</title>
 <style>
   body {
     font-family: sans-serif;
     text-align: center;
-    font-size: 3em; /* gut lesbar auf E-Ink */
+    font-size: 3em;
     background: white;
     color: black;
     margin: 0;
@@ -20,87 +20,1336 @@
 </head>
 <body>
 
-<div id="kalender">Lade Abfuhrkalender...</div>
+<div id="kalender">Lade Abfuhrkalender…</div>
 
 <script>
-// =========================
-// Konfiguration
-// =========================
-const icsUrl = "1C8M2L_kjM1kF1qVjYve220wwqM-X2vTl"; // z. B. Google Drive öffentlich
+// ===============================
+// HIER ICS-INHALT EINFÜGEN
+// ===============================
+const icsText = `
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//ZContent.net//ZapCalLib 1.0//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260901
+DTEND;VALUE=DATE:20260902
+TRANSP:TRANSPARENT
+UID:2026-09-01-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20261201
+DTEND;VALUE=DATE:20261202
+TRANSP:TRANSPARENT
+UID:2026-12-01-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20260202
+DTEND;VALUE=DATE:20260203
+TRANSP:TRANSPARENT
+UID:2026-02-02-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20260302
+DTEND;VALUE=DATE:20260303
+TRANSP:TRANSPARENT
+UID:2026-03-02-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260602
+DTEND;VALUE=DATE:20260603
+TRANSP:TRANSPARENT
+UID:2026-06-02-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20260103
+DTEND;VALUE=DATE:20260104
+TRANSP:TRANSPARENT
+UID:2026-01-03-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260203
+DTEND;VALUE=DATE:20260204
+TRANSP:TRANSPARENT
+UID:2026-02-03-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260303
+DTEND;VALUE=DATE:20260304
+TRANSP:TRANSPARENT
+UID:2026-03-03-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20260703
+DTEND;VALUE=DATE:20260704
+TRANSP:TRANSPARENT
+UID:2026-07-03-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20260803
+DTEND;VALUE=DATE:20260804
+TRANSP:TRANSPARENT
+UID:2026-08-03-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20261103
+DTEND;VALUE=DATE:20261104
+TRANSP:TRANSPARENT
+UID:2026-11-03-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260804
+DTEND;VALUE=DATE:20260805
+TRANSP:TRANSPARENT
+UID:2026-08-04-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20261204
+DTEND;VALUE=DATE:20261205
+TRANSP:TRANSPARENT
+UID:2026-12-04-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20260105
+DTEND;VALUE=DATE:20260106
+TRANSP:TRANSPARENT
+UID:2026-01-05-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260505
+DTEND;VALUE=DATE:20260506
+TRANSP:TRANSPARENT
+UID:2026-05-05-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260106
+DTEND;VALUE=DATE:20260107
+TRANSP:TRANSPARENT
+UID:2026-01-06-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20260606
+DTEND;VALUE=DATE:20260607
+TRANSP:TRANSPARENT
+UID:2026-06-06-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20260706
+DTEND;VALUE=DATE:20260707
+TRANSP:TRANSPARENT
+UID:2026-07-06-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20261006
+DTEND;VALUE=DATE:20261007
+TRANSP:TRANSPARENT
+UID:2026-10-06-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20261106
+DTEND;VALUE=DATE:20261107
+TRANSP:TRANSPARENT
+UID:2026-11-06-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260707
+DTEND;VALUE=DATE:20260708
+TRANSP:TRANSPARENT
+UID:2026-07-07-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20261207
+DTEND;VALUE=DATE:20261208
+TRANSP:TRANSPARENT
+UID:2026-12-07-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260408
+DTEND;VALUE=DATE:20260409
+TRANSP:TRANSPARENT
+UID:2026-04-08-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20260508
+DTEND;VALUE=DATE:20260509
+TRANSP:TRANSPARENT
+UID:2026-05-08-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20260608
+DTEND;VALUE=DATE:20260609
+TRANSP:TRANSPARENT
+UID:2026-06-08-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260908
+DTEND;VALUE=DATE:20260909
+TRANSP:TRANSPARENT
+UID:2026-09-08-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20261208
+DTEND;VALUE=DATE:20261209
+TRANSP:TRANSPARENT
+UID:2026-12-08-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260609
+DTEND;VALUE=DATE:20260610
+TRANSP:TRANSPARENT
+UID:2026-06-09-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20261009
+DTEND;VALUE=DATE:20261010
+TRANSP:TRANSPARENT
+UID:2026-10-09-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20261109
+DTEND;VALUE=DATE:20261110
+TRANSP:TRANSPARENT
+UID:2026-11-09-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260210
+DTEND;VALUE=DATE:20260211
+TRANSP:TRANSPARENT
+UID:2026-02-10-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260310
+DTEND;VALUE=DATE:20260311
+TRANSP:TRANSPARENT
+UID:2026-03-10-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20261110
+DTEND;VALUE=DATE:20261111
+TRANSP:TRANSPARENT
+UID:2026-11-10-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20260411
+DTEND;VALUE=DATE:20260412
+TRANSP:TRANSPARENT
+UID:2026-04-11-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20260511
+DTEND;VALUE=DATE:20260512
+TRANSP:TRANSPARENT
+UID:2026-05-11-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260811
+DTEND;VALUE=DATE:20260812
+TRANSP:TRANSPARENT
+UID:2026-08-11-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20260911
+DTEND;VALUE=DATE:20260912
+TRANSP:TRANSPARENT
+UID:2026-09-11-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260512
+DTEND;VALUE=DATE:20260513
+TRANSP:TRANSPARENT
+UID:2026-05-12-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20261012
+DTEND;VALUE=DATE:20261013
+TRANSP:TRANSPARENT
+UID:2026-10-12-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260113
+DTEND;VALUE=DATE:20260114
+TRANSP:TRANSPARENT
+UID:2026-01-13-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20260213
+DTEND;VALUE=DATE:20260214
+TRANSP:TRANSPARENT
+UID:2026-02-13-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20260313
+DTEND;VALUE=DATE:20260314
+TRANSP:TRANSPARENT
+UID:2026-03-13-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20260413
+DTEND;VALUE=DATE:20260414
+TRANSP:TRANSPARENT
+UID:2026-04-13-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20261013
+DTEND;VALUE=DATE:20261014
+TRANSP:TRANSPARENT
+UID:2026-10-13-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20260214
+DTEND;VALUE=DATE:20260215
+TRANSP:TRANSPARENT
+UID:2026-02-14-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260414
+DTEND;VALUE=DATE:20260415
+TRANSP:TRANSPARENT
+UID:2026-04-14-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260714
+DTEND;VALUE=DATE:20260715
+TRANSP:TRANSPARENT
+UID:2026-07-14-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20260814
+DTEND;VALUE=DATE:20260815
+TRANSP:TRANSPARENT
+UID:2026-08-14-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20260914
+DTEND;VALUE=DATE:20260915
+TRANSP:TRANSPARENT
+UID:2026-09-14-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260915
+DTEND;VALUE=DATE:20260916
+TRANSP:TRANSPARENT
+UID:2026-09-15-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20261215
+DTEND;VALUE=DATE:20261216
+TRANSP:TRANSPARENT
+UID:2026-12-15-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20260116
+DTEND;VALUE=DATE:20260117
+TRANSP:TRANSPARENT
+UID:2026-01-16-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20260316
+DTEND;VALUE=DATE:20260317
+TRANSP:TRANSPARENT
+UID:2026-03-16-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260616
+DTEND;VALUE=DATE:20260617
+TRANSP:TRANSPARENT
+UID:2026-06-16-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260317
+DTEND;VALUE=DATE:20260318
+TRANSP:TRANSPARENT
+UID:2026-03-17-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20260717
+DTEND;VALUE=DATE:20260718
+TRANSP:TRANSPARENT
+UID:2026-07-17-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20260817
+DTEND;VALUE=DATE:20260818
+TRANSP:TRANSPARENT
+UID:2026-08-17-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20261117
+DTEND;VALUE=DATE:20261118
+TRANSP:TRANSPARENT
+UID:2026-11-17-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260218
+DTEND;VALUE=DATE:20260219
+TRANSP:TRANSPARENT
+UID:2026-02-18-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260818
+DTEND;VALUE=DATE:20260819
+TRANSP:TRANSPARENT
+UID:2026-08-18-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20261218
+DTEND;VALUE=DATE:20261219
+TRANSP:TRANSPARENT
+UID:2026-12-18-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20260119
+DTEND;VALUE=DATE:20260120
+TRANSP:TRANSPARENT
+UID:2026-01-19-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260519
+DTEND;VALUE=DATE:20260520
+TRANSP:TRANSPARENT
+UID:2026-05-19-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20260619
+DTEND;VALUE=DATE:20260620
+TRANSP:TRANSPARENT
+UID:2026-06-19-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20261219
+DTEND;VALUE=DATE:20261220
+TRANSP:TRANSPARENT
+UID:2026-12-19-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260120
+DTEND;VALUE=DATE:20260121
+TRANSP:TRANSPARENT
+UID:2026-01-20-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20260720
+DTEND;VALUE=DATE:20260721
+TRANSP:TRANSPARENT
+UID:2026-07-20-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20261020
+DTEND;VALUE=DATE:20261021
+TRANSP:TRANSPARENT
+UID:2026-10-20-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20261120
+DTEND;VALUE=DATE:20261121
+TRANSP:TRANSPARENT
+UID:2026-11-20-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260421
+DTEND;VALUE=DATE:20260422
+TRANSP:TRANSPARENT
+UID:2026-04-21-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260721
+DTEND;VALUE=DATE:20260722
+TRANSP:TRANSPARENT
+UID:2026-07-21-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20261221
+DTEND;VALUE=DATE:20261222
+TRANSP:TRANSPARENT
+UID:2026-12-21-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20260522
+DTEND;VALUE=DATE:20260523
+TRANSP:TRANSPARENT
+UID:2026-05-22-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20260622
+DTEND;VALUE=DATE:20260623
+TRANSP:TRANSPARENT
+UID:2026-06-22-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260922
+DTEND;VALUE=DATE:20260923
+TRANSP:TRANSPARENT
+UID:2026-09-22-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260623
+DTEND;VALUE=DATE:20260624
+TRANSP:TRANSPARENT
+UID:2026-06-23-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20261023
+DTEND;VALUE=DATE:20261024
+TRANSP:TRANSPARENT
+UID:2026-10-23-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20261123
+DTEND;VALUE=DATE:20261124
+TRANSP:TRANSPARENT
+UID:2026-11-23-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260224
+DTEND;VALUE=DATE:20260225
+TRANSP:TRANSPARENT
+UID:2026-02-24-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260324
+DTEND;VALUE=DATE:20260325
+TRANSP:TRANSPARENT
+UID:2026-03-24-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20260424
+DTEND;VALUE=DATE:20260425
+TRANSP:TRANSPARENT
+UID:2026-04-24-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20261124
+DTEND;VALUE=DATE:20261125
+TRANSP:TRANSPARENT
+UID:2026-11-24-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260825
+DTEND;VALUE=DATE:20260826
+TRANSP:TRANSPARENT
+UID:2026-08-25-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20260925
+DTEND;VALUE=DATE:20260926
+TRANSP:TRANSPARENT
+UID:2026-09-25-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20260526
+DTEND;VALUE=DATE:20260527
+TRANSP:TRANSPARENT
+UID:2026-05-26-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20261026
+DTEND;VALUE=DATE:20261027
+TRANSP:TRANSPARENT
+UID:2026-10-26-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260127
+DTEND;VALUE=DATE:20260128
+TRANSP:TRANSPARENT
+UID:2026-01-27-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20260227
+DTEND;VALUE=DATE:20260228
+TRANSP:TRANSPARENT
+UID:2026-02-27-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20260327
+DTEND;VALUE=DATE:20260328
+TRANSP:TRANSPARENT
+UID:2026-03-27-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20260427
+DTEND;VALUE=DATE:20260428
+TRANSP:TRANSPARENT
+UID:2026-04-27-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260527
+DTEND;VALUE=DATE:20260528
+TRANSP:TRANSPARENT
+UID:2026-05-27-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20261027
+DTEND;VALUE=DATE:20261028
+TRANSP:TRANSPARENT
+UID:2026-10-27-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20260328
+DTEND;VALUE=DATE:20260329
+TRANSP:TRANSPARENT
+UID:2026-03-28-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260428
+DTEND;VALUE=DATE:20260429
+TRANSP:TRANSPARENT
+UID:2026-04-28-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260728
+DTEND;VALUE=DATE:20260729
+TRANSP:TRANSPARENT
+UID:2026-07-28-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20260828
+DTEND;VALUE=DATE:20260829
+TRANSP:TRANSPARENT
+UID:2026-08-28-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20260928
+DTEND;VALUE=DATE:20260929
+TRANSP:TRANSPARENT
+UID:2026-09-28-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260929
+DTEND;VALUE=DATE:20260930
+TRANSP:TRANSPARENT
+UID:2026-09-29-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20261229
+DTEND;VALUE=DATE:20261230
+TRANSP:TRANSPARENT
+UID:2026-12-29-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20260130
+DTEND;VALUE=DATE:20260131
+TRANSP:TRANSPARENT
+UID:2026-01-30-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260330
+DTEND;VALUE=DATE:20260331
+TRANSP:TRANSPARENT
+UID:2026-03-30-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Rest
+DTSTART;VALUE=DATE:20260630
+DTEND;VALUE=DATE:20260701
+TRANSP:TRANSPARENT
+UID:2026-06-30-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Resttonne finden Sie unter https
+ ://www.awbkoeln.de/restmuelltonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Papier
+DTSTART;VALUE=DATE:20260731
+DTEND;VALUE=DATE:20260801
+TRANSP:TRANSPARENT
+UID:2026-07-31-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Papiertonne finden Sie unter https://
+ www.awbkoeln.de/papiertonne. \nIhre Tonne ist abhanden gekommen oder defek
+ t? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersatztonn
+ e aus.
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gelbe
+DTSTART;VALUE=DATE:20260831
+DTEND;VALUE=DATE:20260901
+TRANSP:TRANSPARENT
+UID:2026-08-31-0@awbkoeln.de
+DTSTAMP:20260106T155928
+DESCRIPTION:Weitere Informationen zur Gelbetonne finden Sie unter https
+ ://www.awbkoeln.de/Gelbetonne. \nIhre Tonne ist abhanden gekommen oder
+  defekt? Bitte füllen Sie das Formular unter https://www.awbkoeln.de/ersa
+ tztonne aus.
+END:VEVENT
+END:VCALENDAR
+`;
+
+// Emojis (E-Ink-geeignet)
 const TONNEN = {
-    "Gelb": "♻️",
-    "Rest": "🗑️",
-    "Papier": "📘"
+  "Gelb": "♻️",
+  "Rest": "🗑️",
+  "Papier": "📘"
 };
 
-// =========================
+// ===============================
 // Hilfsfunktionen
-// =========================
+// ===============================
 function formatDate(d) {
-    const tag = String(d.getDate()).padStart(2,'0');
-    const monat = String(d.getMonth()+1).padStart(2,'0');
-    const jahr = d.getFullYear();
-    return `${tag}.${monat}.${jahr}`;
+  return d.toLocaleDateString("de-DE");
 }
 
-function parseICS(icsText) {
-    const lines = icsText.split("\n");
-    let events = [];
-    let current = {};
-    lines.forEach(line => {
-        if(line.startsWith("BEGIN:VEVENT")) current = {};
-        if(line.startsWith("SUMMARY:")) current.summary = line.substring(8).trim();
-        if(line.startsWith("DTSTART")) {
-            const d = line.match(/\d{8}/)[0];
-            current.date = `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}`;
-        }
-        if(line.startsWith("END:VEVENT")) events.push(current);
-    });
-    return events;
+function parseICS(text) {
+  const events = [];
+  const lines = text.split(/\r?\n/);
+  let event = null;
+
+  lines.forEach(line => {
+    if (line.startsWith("BEGIN:VEVENT")) event = {};
+    if (line.startsWith("SUMMARY:")) event.summary = line.substring(8);
+    if (line.startsWith("DTSTART")) {
+      const d = line.match(/\d{8}/)[0];
+      event.date = `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}`;
+    }
+    if (line.startsWith("END:VEVENT")) events.push(event);
+  });
+
+  return events;
 }
 
-// =========================
-// Hauptfunktion
-// =========================
-fetch(icsUrl)
-.then(response => response.text())
-.then(data => {
-    const events = parseICS(data);
-    const today = new Date();
-    const morgen = new Date();
-    morgen.setDate(today.getDate()+1);
+// ===============================
+// Logik
+// ===============================
+const events = parseICS(icsText);
 
-    const todayStr = today.toISOString().slice(0,10);
-    const morgenStr = morgen.toISOString().slice(0,10);
+const today = new Date();
+const tomorrow = new Date();
+tomorrow.setDate(today.getDate() + 1);
 
-    let output = [];
+const todayStr = today.toISOString().slice(0,10);
+const tomorrowStr = tomorrow.toISOString().slice(0,10);
 
-    // Prüfen, welche Tonnen heute dran sind
-    events.forEach(e => {
-        for(let key in TONNEN){
-            if(e.summary.includes(key) && e.date === todayStr){
-                output.push(`${TONNEN[key]} heute – ${formatDate(today)}`);
-            }
-        }
-    });
+let output = [];
 
-    // Wenn heute nichts, dann morgen prüfen
-    events.forEach(e => {
-        for(let key in TONNEN){
-            if(e.summary.includes(key) && e.date === morgenStr){
-                output.push(`${TONNEN[key]} morgen – ${formatDate(morgen)}`);
-            }
-        }
-    });
-
-    if(output.length === 0) output.push("✅ Heute keine Abfuhr");
-
-    document.getElementById("kalender").innerHTML = output.join("<br>");
-})
-.catch(err => {
-    console.error(err);
-    document.getElementById("kalender").innerHTML = "Fehler beim Laden des Kalenders";
+events.forEach(e => {
+  for (let key in TONNEN) {
+    if (e.summary?.includes(key) && e.date === todayStr) {
+      output.push(`${TONNEN[key]} heute – ${formatDate(today)}`);
+    }
+  }
 });
+
+events.forEach(e => {
+  for (let key in TONNEN) {
+    if (e.summary?.includes(key) && e.date === tomorrowStr) {
+      output.push(`${TONNEN[key]} morgen – ${formatDate(tomorrow)}`);
+    }
+  }
+});
+
+if (output.length === 0) {
+  output.push("✅ Heute keine Abfuhr");
+}
+
+document.getElementById("kalender").innerHTML = output.join("<br>");
 </script>
 
 </body>
