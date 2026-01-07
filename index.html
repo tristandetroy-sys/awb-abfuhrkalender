@@ -15,33 +15,38 @@
   .screen {
     width: 100vw;
     height: 100vh;
+
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-  }
 
-  .list {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
     text-align: center;
   }
 
-  .item {
-    margin: 24px 0;
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 60px;
+  }
+
+  .col {
+    min-width: 160px;
   }
 
   .emoji {
-    font-size: 72px;
+    font-size: 80px;
     line-height: 1;
   }
 
   .label {
     font-size: 28px;
-    margin-top: 6px;
+    margin-top: 10px;
   }
 
   .date {
     font-size: 24px;
-    margin-top: 2px;
+    margin-top: 6px;
   }
 </style>
 </head>
@@ -49,7 +54,7 @@
 <body>
 
 <div class="screen">
-  <div id="output" class="list">Lade…</div>
+  <div id="output" class="grid">Lade…</div>
 </div>
 
 <script>
@@ -1311,8 +1316,8 @@ END:VCALENDAR
 `;
 
 const TONNEN = {
-  Gelbe: { emoji: "♻️", label: "Gelb" },
-  Rest: { emoji: "🗑️", label: "Rest" },
+  Gelbe:  { emoji: "♻️", label: "Gelb" },
+  Rest:   { emoji: "🗑️", label: "Rest" },
   Papier: { emoji: "📘", label: "Papier" }
 };
 
@@ -1352,24 +1357,21 @@ function formatDate(d) {
 
 let html = "";
 
-for (const key in TONNEN) {
+for (const key of ["Gelbe", "Rest", "Papier"]) {
   const next = events
     .filter(e => e.summary.includes(key) && e.date >= today)
     .sort((a,b) => a.date - b.date)[0];
 
-  if (!next) continue;
-
   html += `
-    <div class="item">
+    <div class="col">
       <div class="emoji">${TONNEN[key].emoji}</div>
       <div class="label">${TONNEN[key].label}</div>
-      <div class="date">${formatDate(next.date)}</div>
+      <div class="date">${next ? formatDate(next.date) : "–"}</div>
     </div>
   `;
 }
 
-document.getElementById("output").innerHTML =
-  html || "<div class='label'>Keine Termine gefunden</div>";
+document.getElementById("output").innerHTML = html;
 </script>
 
 </body>
